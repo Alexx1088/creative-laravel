@@ -8,37 +8,14 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
    public function index() {
-/*
-       $posts = Post::all();
 
-       foreach ($posts as $post) {
+$posts = Post::all();
 
-           dump($post->image);
-       }*/
+ return view('post', compact('posts'));
 
-      // dd($posts);
+// dump($posts->title);
 
-      /* $post = Post::where('is_published', 0)->first();
-
-       dump($post->title);*/
-
-       $posts = Post::where('is_published', 0)->get();
-
-       foreach ($posts as $post) {
-
-      dump($post->title);
-      // echo    gettype($posts);
-
-       }
-
-    /*   foreach ($post as $post) {
-          dump($post->content);
-       }*/
-
-    //   dump($post->title);
-
-
-     //  dd('end');
+//      dd('end');
           }
 
     public function create() {
@@ -102,6 +79,53 @@ class PostController extends Controller
         dd('deleted');
 
     }
+public function first_or_create() {
+ //$post = Post::find(1);
+
+ $anotherPost = ['title' => 'some post',
+            'content' => 'some content',
+            'image' => 'some_image.jpg',
+            'likes' => '5000',
+            'is_published' => '0',];
+
+$post = Post::firstOrCreate(
+    ['title' => 'some title for phpstorm'],
+
+     ['title' => 'someq title phpstorm',
+         'content' => 'someq content',
+         'image' => 'someq_image.jpg',
+         'likes' => '5000',
+         'is_published' => '0',
+ ]);
+
+dump($post->title);
+dd('finished');
+}
+
+public function updateOrCreate() {
+
+       $anotherPost = ['title' => 'update or create some title',
+           'content' => 'update or create some content',
+           'image' => 'update or create some image.jpg',
+           'likes' => '15000',
+           'is_published' => '1'];
+
+       $post = Post::updateOrCreate(
+           ['title' => 'blabla', ],
+
+           [
+           'title' => ' bla title not phpstorm',
+           'content' => 'its not update some content',
+           'image' => 'its not update some image.jpg',
+           'likes' => '100',
+           'is_published' => '1'
+       ]);
+
+       dump($post->content);
+   dd('danunah');
+
+}
+
 
 }
 
