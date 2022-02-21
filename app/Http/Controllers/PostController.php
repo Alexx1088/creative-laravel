@@ -5,90 +5,83 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+
 //use phpDocumentor\Reflection\DocBlock\Tag;
 use App\Models\Tag;
 
 
 class PostController extends Controller
 {
-   public function index() {
+    public function index()
+    {
 
-//$posts = Post::all();
+        $posts = Post::all();
 
-      $category = Category::find(1);
-//dd($category->posts);
-
-     //  $post = Post::find(2);
-
-       $tag = Tag::find(1);
-
-     //  dd($post->tags);
-
-       dd($tag->posts);
-
-//$posts = Post::where('category_id', $category->id)->get();
-
-//dd($post->category);
-//dd($category);
-//dd($posts);
-
-// return view('post.index', compact('posts'));
-
-// dump($posts->title);
-
-//      dd('end');
-          }
-
-    public function create() {
-
-       return view('post.create');
+        return view('post.index', compact('posts'));
 
     }
 
-    public function store(){
+    public function create()
+    {
+        $categories = Category::all();
 
-       $data = request()->validate([
-
-           'title'=> 'string',
-           'content'=> 'string',
-           'image'=> 'string',
-       ]);
-
-  Post::create($data);
-
-  return redirect()->route('post.index');
+        return view('post.create', compact('categories'));
 
     }
 
-    public function show(Post $post) {
+    public function store()
+    {
+        $data = request()->validate([
 
-    return view('post.show', compact('post'));
+            'title' => 'string',
+            'content' => 'string',
+            'image' => 'string',
+            'category_id' => '',
+        ]);
+
+        //  dd($data);
+
+        Post::create($data);
+
+        return redirect()->route('post.index');
 
     }
 
-public function edit(Post $post) {
+    public function show(Post $post)
+    {
 
-       return view('post.edit', compact('post'));
+        return view('post.show', compact('post'));
 
-}
+    }
 
-    public function update(Post $post) {
+    public function edit(Post $post)
+    {
+        $categories = Category::all();
+
+        return view('post.edit', compact('post', 'categories'));
+
+    }
+
+    public function update(Post $post)
+    {
 
         $data = request()->validate([
 
-            'title'=> '',
-            'content'=> '',
-            'image'=> '',
+            'title' => '',
+            'content' => '',
+            'image' => '',
+            'category_id'=> '',
         ]);
-      $post->update($data);
-      return redirect()->route('post.show', $post->id);
+        $post->update($data);
+        return redirect()->route('post.show', $post->id);
     }
 
-    public function delete() {
+    public function delete()
+    {
 
         $post = Post::withTrashed()->find(2);
 
-       //  dump($post->content);
+        //  dump($post->content);
 
         $post->restore();
 
@@ -96,63 +89,62 @@ public function edit(Post $post) {
 
     }
 
-  public function destroy(Post $post) {
+    public function destroy(Post $post)
+    {
 
-     $post->delete();
-     return redirect()->route('post.index');
-  }
-
-
-
+        $post->delete();
+        return redirect()->route('post.index');
+    }
 
 
+    public function first_or_create()
+    {
+        //$post = Post::find(1);
 
-public function first_or_create() {
- //$post = Post::find(1);
-
- $anotherPost = ['title' => 'some post',
+        $anotherPost = ['title' => 'some post',
             'content' => 'some content',
             'image' => 'some_image.jpg',
             'likes' => '5000',
             'is_published' => '0',];
 
-$post = Post::firstOrCreate(
-    ['title' => 'some title for phpstorm'],
+        $post = Post::firstOrCreate(
+            ['title' => 'some title for phpstorm'],
 
-     ['title' => 'someq title phpstorm',
-         'content' => 'someq content',
-         'image' => 'someq_image.jpg',
-         'likes' => '5000',
-         'is_published' => '0',
- ]);
+            ['title' => 'someq title phpstorm',
+                'content' => 'someq content',
+                'image' => 'someq_image.jpg',
+                'likes' => '5000',
+                'is_published' => '0',
+            ]);
 
-dump($post->title);
-dd('finished');
-}
+        dump($post->title);
+        dd('finished');
+    }
 
-public function updateOrCreate() {
+    public function updateOrCreate()
+    {
 
-       $anotherPost = ['title' => 'update or create some title',
-           'content' => 'update or create some content',
-           'image' => 'update or create some image.jpg',
-           'likes' => '15000',
-           'is_published' => '1'];
+        $anotherPost = ['title' => 'update or create some title',
+            'content' => 'update or create some content',
+            'image' => 'update or create some image.jpg',
+            'likes' => '15000',
+            'is_published' => '1'];
 
-       $post = Post::updateOrCreate(
-           ['title' => 'blabla', ],
+        $post = Post::updateOrCreate(
+            ['title' => 'blabla',],
 
-           [
-           'title' => ' bla title not phpstorm',
-           'content' => 'its not update some content',
-           'image' => 'its not update some image.jpg',
-           'likes' => '100',
-           'is_published' => '1'
-       ]);
+            [
+                'title' => ' bla title not phpstorm',
+                'content' => 'its not update some content',
+                'image' => 'its not update some image.jpg',
+                'likes' => '100',
+                'is_published' => '1'
+            ]);
 
-       dump($post->content);
-   dd('danunah');
+        dump($post->content);
+        dd('danunah');
 
-}
+    }
 
 
 }
